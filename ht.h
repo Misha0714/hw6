@@ -361,7 +361,7 @@ void HashTable<K,V,Prober,Hash,KEqual>::insert(const ItemType& p)
 {
 	// Check if resizing is required
     if (double(size_ + deleted) / table_.size() >= resizeAlpha) {
-			std::cerr <<"here";
+			//std::cerr <<"here";
         resize();
 				
     }
@@ -505,11 +505,16 @@ void HashTable<K,V,Prober,Hash,KEqual>::resize()
     // Rehash all non-deleted items into the new table
     for (size_t i = 0; i < tableSize_; ++i) {
         HashItem* currentItem = oldTable[i];
-        if (currentItem != nullptr && !currentItem->deleted) {
+        if (currentItem != nullptr) {
             // Probe to find the index in the new table
+						if(currentItem->deleted) {
+							delete currentItem; 
+						}
+						else {
             HASH_INDEX_T newIndex = probe(currentItem->item.first); 
             // Assign the item to the new table
             table_[newIndex] = currentItem;
+						}
         }
     }
 		//std::cerr <<"here" <<std::endl;
